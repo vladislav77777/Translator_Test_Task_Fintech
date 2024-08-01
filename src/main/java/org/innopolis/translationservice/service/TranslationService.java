@@ -18,6 +18,20 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
+//Вход
+//
+//en → ru
+//
+//Hello world, this is my first program
+//
+//Выход
+//
+//Пример 1: http 200 Привет мир, это является мой первый программа
+//
+//Пример 2: http 400 Не найден язык исходного сообщения
+//
+//Пример 3: http 400 Ошибка доступа к ресурсу перевода
+
 @Service
 @RequiredArgsConstructor
 public class TranslationService {
@@ -25,8 +39,8 @@ public class TranslationService {
     private final TranslationRequestRepository repository;
     private final ExecutorService executorService;
 
-    private final String API_URL = "https://api.serper.dev/translate";
-    private final String API_KEY = "aaf471e962f7ac8035c0f12e687ea2331e26ea5a";
+    private final String API_URL = "CHANGE";
+    private final String API_KEY = "CHANGE";
 
     public String translate(String input, String sourceLang, String targetLang, String ip) throws ExecutionException, InterruptedException {
         String[] words = input.split(" ");
