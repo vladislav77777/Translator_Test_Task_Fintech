@@ -1,11 +1,10 @@
 # Translation Service
 
-This is a simple translation service built with Spring Boot that uses an external translation API.
+This is a simple translation service built with Spring Boot that uses an external translation rapid API.
 
 ## Prerequisites
 
 - Docker
-- Docker Compose
 - Java 17 or higher
 - Maven
 
@@ -30,11 +29,7 @@ This is a simple translation service built with Spring Boot that uses an externa
     docker-compose up -d
     ```
 
-4. Run the application:
-
-    ```bash
-    mvn spring-boot:run
-    ```
+4. Run the application.
 
 5. Open your browser and go to `http://localhost:8080`.
 
@@ -44,8 +39,5 @@ Enter the text you want to translate, the source language, and the target langua
 
 Screens:
 
-TODO...
+![image](https://github.com/user-attachments/assets/39d72bad-a4fd-4731-8220-e7eae157f5a7)
 
-
-
-![image](https://github.com/user-attachments/assets/6390cbca-6f98-47bf-999e-ce0835c82fcb)
