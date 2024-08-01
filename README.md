@@ -53,3 +53,9 @@ Screens:
 
 ![image](https://github.com/user-attachments/assets/be8ed6d5-01ac-42c8-9eb8-1bbbcea67edf)
 
+
+
+сохранение в БД
+
+
+![image](https://github.com/user-attachments/assets/68072696-6d2b-4ede-a184-0a15d185fa51)
