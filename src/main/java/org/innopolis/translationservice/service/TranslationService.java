@@ -1,6 +1,11 @@
 package org.innopolis.translationservice.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.innopolis.translationservice.configuration.ApplicationConfiguration;
+import org.innopolis.translationservice.exception.TranslationClientException;
+import org.innopolis.translationservice.exception.TranslationServerException;
 import org.innopolis.translationservice.model.TranslationRequest;
 import org.innopolis.translationservice.repository.TranslationRequestRepository;
 import org.springframework.http.HttpEntity;
@@ -13,24 +18,11 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-
-//Вход
-//
-//en → ru
-//
-//Hello world, this is my first program
-//
-//Выход
-//
-//Пример 1: http 200 Привет мир, это является мой первый программа
-//
-//Пример 2: http 400 Не найден язык исходного сообщения
-//
-//Пример 3: http 400 Ошибка доступа к ресурсу перевода
+import java.util.concurrent.Future;
 
 @Service
 @RequiredArgsConstructor
@@ -38,62 +30,44 @@ public class TranslationService {
     private final RestTemplate restTemplate;
     private final TranslationRequestRepository repository;
     private final ExecutorService executorService;
-
-    private final String API_URL = "CHANGE";
-    private final String API_KEY = "CHANGE";
+    private final ObjectMapper objectMapper;
+    private final ApplicationConfiguration config;
 
     public String translate(String input, String sourceLang, String targetLang, String ip) throws ExecutionException, InterruptedException {
         String[] words = input.split(" ");
-        List<String> translatedWords =
-                executorService.submit(() -> translateWords(words, sourceLang, targetLang)).get();
+        List<Future<String>> futures = new ArrayList<>();
+
+        for (String word : words) {
+            futures.add(executorService.submit(() -> translateWord(word, sourceLang, targetLang)));
+        }
+        List<String> translatedWords = new ArrayList<>();
+        for (Future<String> future : futures) {
+            translatedWords.add(future.get());
+        }
 
         String result = String.join(" ", translatedWords);
         saveRequest(ip, input, result);
         return result;
     }
 
-    private List<String> translateWords(String[] words, String sourceLang, String targetLang) {
-        return Arrays.stream(words)
-                .map(word -> {
-                    try {
-                        return translateWord(word, sourceLang, targetLang);
-                    } catch (Exception e) {
-                        return handleTranslationError(e);
-                    }
-                }).toList();
-    }
-
     private String translateWord(String word, String sourceLang, String targetLang) {
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + API_KEY);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        headers.set("x-rapidapi-key", config.rapidApi().key());
+        headers.set("x-rapidapi-host", "google-translate1.p.rapidapi.com");
+        headers.set("Content-Type", "application/x-www-form-urlencoded");
 
-        String url = String.format("%s?text=%s&source=%s&target=%s", API_URL, word, sourceLang, targetLang);
+        HttpEntity<String> entity = new HttpEntity<>("q=" + word + "&target=" + targetLang + "&source=" + sourceLang, headers);
+
         try {
-            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-            return response.getBody();
+            ResponseEntity<String> response = restTemplate.exchange(config.rapidApi().url(), HttpMethod.POST, entity, String.class);
+            JsonNode jsonResponse = objectMapper.readTree(response.getBody());
+            return jsonResponse.path("data").path("translations").get(0).path("translatedText").asText();
         } catch (HttpClientErrorException e) {
-            throw new RuntimeException("Client error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString(), e);
+            throw new TranslationClientException("Client error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
         } catch (HttpServerErrorException e) {
-            throw new RuntimeException("Server error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString(), e);
+            throw new TranslationServerException("Server error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
         } catch (Exception e) {
             throw new RuntimeException("Unexpected error: " + e.getMessage(), e);
-        }
-    }
-
-    private String handleTranslationError(Exception e) {
-        if (e instanceof HttpClientErrorException) {
-            HttpClientErrorException clientError = (HttpClientErrorException) e;
-            switch (clientError.getStatusCode().value()) {
-                case 400:
-                    return "Ошибка доступа к ресурсу перевода";
-                default:
-                    return "Ошибка клиента: " + clientError.getMessage();
-            }
-        } else if (e instanceof HttpServerErrorException) {
-            return "Ошибка сервера: " + e.getMessage();
-        } else {
-            return "Неизвестная ошибка: " + e.getMessage();
         }
     }
 
@@ -103,4 +77,3 @@ public class TranslationService {
         repository.save(request);
     }
 }
-

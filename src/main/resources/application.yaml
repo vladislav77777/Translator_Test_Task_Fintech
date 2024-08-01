@@ -1,3 +1,8 @@
+app:
+  rapid-api:
+    url: ${API_URL}
+    key: ${API_KEY}
+
 spring:
   application:
     name: translation-service
