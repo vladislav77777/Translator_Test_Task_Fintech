@@ -56,8 +56,14 @@ public class TranslationService {
         headers.set("x-rapidapi-host", "google-translate1.p.rapidapi.com");
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
-        HttpEntity<String> entity = new HttpEntity<>("q=" + word + "&target=" + targetLang + "&source=" + sourceLang, headers);
 
+        // Ensure correct encoding of parameters
+        String body = String.format("q=%s&source=%s&target=%s",
+                encodeValue(word),
+                sourceLang,
+                targetLang);
+
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
         try {
             ResponseEntity<String> response = restTemplate.exchange(config.rapidApi().url(), HttpMethod.POST, entity, String.class);
             JsonNode jsonResponse = objectMapper.readTree(response.getBody());
@@ -71,7 +77,13 @@ public class TranslationService {
         }
     }
 
-
+    private String encodeValue(String value) {
+        try {
+            return java.net.URLEncoder.encode(value, "UTF-8");
+        } catch (Exception e) {
+            throw new RuntimeException("Encoding error: " + e.getMessage(), e);
+        }
+    }
     private void saveRequest(String ip, String input, String result) {
         TranslationRequest request = new TranslationRequest(null, ip, input, result, LocalDateTime.now());
         repository.save(request);
