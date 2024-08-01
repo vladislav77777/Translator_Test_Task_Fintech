@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: translation-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/translator}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  thymeleaf:
+    cache: false
