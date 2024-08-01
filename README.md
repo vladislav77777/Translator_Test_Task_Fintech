@@ -44,12 +44,12 @@ Screens:
 
 ![image](https://github.com/user-attachments/assets/39d72bad-a4fd-4731-8220-e7eae157f5a7)
 
-
+ошибка с языком перевода
 ![image](https://github.com/user-attachments/assets/538d7d98-b510-4db7-90a2-96d2c143dfdf)
 
-
+ошибка с языком перевода
 ![image](https://github.com/user-attachments/assets/a4af0c95-c59d-4623-8ec4-b90e5d436433)
 
-
+ошибка API
 ![image](https://github.com/user-attachments/assets/be8ed6d5-01ac-42c8-9eb8-1bbbcea67edf)
 
