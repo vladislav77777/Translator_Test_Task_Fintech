@@ -6,13 +6,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestControllerAdvice
 public class APIExceptionHandler {
 
     @ExceptionHandler(TranslationClientException.class)
-    public ResponseEntity<String> handleClientException(TranslationClientException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ModelAndView handleClientException(TranslationClientException ex) {
+        ModelAndView mav = new ModelAndView("index");
+        mav.addObject("translatedText", ex.getMessage());
+        return mav;
     }
 
     @ExceptionHandler(TranslationServerException.class)

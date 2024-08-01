@@ -3,31 +3,51 @@
 <head>
     <title>Translation Service</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="container">
     <h1>Translation Service</h1>
-    <form th:action="@{/translate}" method="post">
-        <div>
+    <form id="translationForm">
+        <div class="form-group">
             <label for="text">Text to translate:</label>
-            <input type="text" id="text" name="text" required>
+            <input type="text" id="text" name="text" required placeholder="Enter text to translate">
         </div>
-        <div>
+        <div class="form-group">
             <label for="sourceLang">Source Language:</label>
-            <input type="text" id="sourceLang" name="sourceLang" required>
+            <input type="text" id="sourceLang" name="sourceLang" required placeholder="e.g., en">
         </div>
-        <div>
+        <div class="form-group">
             <label for="targetLang">Target Language:</label>
-            <input type="text" id="targetLang" name="targetLang" required>
+            <input type="text" id="targetLang" name="targetLang" required placeholder="e.g., es">
         </div>
-        <div>
+        <div class="form-group">
             <button type="submit">Translate</button>
         </div>
     </form>
-    <div th:if="${translatedText != null}">
+    <div id="resultContainer" class="result">
         <h2>Translation Result:</h2>
-        <p th:text="${translatedText}"></p>
+        <p id="translationResult"></p>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('#translationForm').on('submit', function(event) {
+            event.preventDefault(); // Prevent the form from submitting the default way
+
+            $.ajax({
+                url: '/translate', // Your endpoint
+                type: 'POST',
+                data: $(this).serialize(), // Serialize form data
+                success: function(response) {
+                    $('#translationResult').text(response.translatedText); // Display the translation result
+                },
+                error: function(xhr) {
+                    $('#translationResult').text('Error: ' + xhr.responseText); // Display error message
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

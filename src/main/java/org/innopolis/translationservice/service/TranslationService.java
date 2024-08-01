@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.innopolis.translationservice.configuration.ApplicationConfiguration;
 import org.innopolis.translationservice.exception.TranslationClientException;
 import org.innopolis.translationservice.exception.TranslationServerException;
+import org.innopolis.translationservice.model.ResponseErrorBody;
 import org.innopolis.translationservice.model.TranslationRequest;
 import org.innopolis.translationservice.repository.TranslationRequestRepository;
 import org.springframework.http.HttpEntity;
@@ -69,7 +70,20 @@ public class TranslationService {
             JsonNode jsonResponse = objectMapper.readTree(response.getBody());
             return jsonResponse.path("data").path("translations").get(0).path("translatedText").asText();
         } catch (HttpClientErrorException e) {
-            throw new TranslationClientException("Client error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
+            ResponseErrorBody response = e.getResponseBodyAs(ResponseErrorBody.class);
+            assert response != null;
+            if (response
+                    .getError()
+                    .getDetails()
+                    .getFirst()
+                    .getFieldViolations()
+                    .getFirst()
+                    .getField()
+                    .equals("source")
+            ) {
+                throw new TranslationClientException("Не найден язык исходного сообщения");
+            }
+            throw new TranslationClientException(e.getResponseBodyAsString());
         } catch (HttpServerErrorException e) {
             throw new TranslationServerException("Server error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
         } catch (Exception e) {
