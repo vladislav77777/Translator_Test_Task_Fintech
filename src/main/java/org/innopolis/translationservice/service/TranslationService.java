@@ -71,19 +71,30 @@ public class TranslationService {
             return jsonResponse.path("data").path("translations").get(0).path("translatedText").asText();
         } catch (HttpClientErrorException e) {
             ResponseErrorBody response = e.getResponseBodyAs(ResponseErrorBody.class);
-            assert response != null;
-            if (response
-                    .getError()
-                    .getDetails()
-                    .getFirst()
-                    .getFieldViolations()
-                    .getFirst()
-                    .getField()
-                    .equals("source")
-            ) {
+
+            String field;
+            try {
+                field = response
+                        .getError()
+                        .getDetails()
+                        .getFirst()
+                        .getFieldViolations()
+                        .getFirst()
+                        .getField();
+            } catch (NullPointerException ignored) {
+                field = "";
+            }
+
+            if (field.equals("source")) {
                 throw new TranslationClientException("Не найден язык исходного сообщения");
             }
-            throw new TranslationClientException(e.getResponseBodyAsString());
+            else if (field.equals("target")) {
+                throw new TranslationClientException("Не найден язык переводимого сообщения");
+            }
+            else {
+                throw new TranslationClientException(e.getResponseBodyAsString());
+            }
+
         } catch (HttpServerErrorException e) {
             throw new TranslationServerException("Server error: " + e.getStatusCode() + " - " + e.getResponseBodyAsString());
         } catch (Exception e) {
