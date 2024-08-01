@@ -24,10 +24,19 @@ public class TranslationController {
     }
 
     @PostMapping("/translate")
-    public String translate(@RequestParam String text, @RequestParam String sourceLang, @RequestParam String targetLang, HttpServletRequest request, Model model) throws ExecutionException, InterruptedException {
-        String ip = request.getRemoteAddr();
-        String translatedText = translationService.translate(text, sourceLang, targetLang, ip);
-        model.addAttribute("translatedText", translatedText);
+    public String translate(@RequestParam("text") String text,
+                            @RequestParam("sourceLang") String sourceLang,
+                            @RequestParam("targetLang") String targetLang,
+                            Model model) {
+        try {
+            String translatedText = translationService.translate(text, sourceLang, targetLang, "userIp"); // Adjust as necessary
+            model.addAttribute("translatedText", translatedText);
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        model.addAttribute("text", text);
+        model.addAttribute("sourceLang", sourceLang);
+        model.addAttribute("targetLang", targetLang);
         return "index";
     }
 }

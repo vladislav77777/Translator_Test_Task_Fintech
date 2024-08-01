@@ -87,11 +87,11 @@ public class TranslationService {
 
             if (field.equals("source")) {
                 throw new TranslationClientException("Не найден язык исходного сообщения");
-            }
-            else if (field.equals("target")) {
+            } else if (field.equals("target")) {
                 throw new TranslationClientException("Не найден язык переводимого сообщения");
-            }
-            else {
+            } else if (e.getStatusCode().value() == 403) {
+                throw new TranslationClientException("Ошибка доступа к ресурсу перевода ");
+            } else {
                 throw new TranslationClientException(e.getResponseBodyAsString());
             }
 
@@ -109,6 +109,7 @@ public class TranslationService {
             throw new RuntimeException("Encoding error: " + e.getMessage(), e);
         }
     }
+
     private void saveRequest(String ip, String input, String result) {
         TranslationRequest request = new TranslationRequest(null, ip, input, result, LocalDateTime.now());
         repository.save(request);
