@@ -17,11 +17,16 @@ This is a simple translation service built with Spring Boot that uses an externa
     cd translation-service
     ```
     
-2. Add .env file
+2. Build the project and add .env file:
+
+    ```bash
+    mvn clean install
+    ```
+    Add .env file
 
     .env file: https://disk.yandex.ru/d/5BzAc_341XoLtg
    
-Paste it in the root directory of the project.
+- Paste it in the root directory of the project.
 
 3. Start the PostgreSQL, Liquibase and the application itself using Docker Compose:
 
