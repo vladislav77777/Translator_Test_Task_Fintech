@@ -23,7 +23,7 @@ This is a simple translation service built with Spring Boot that uses an externa
     mvn clean install
     ```
 
-3. Start the PostgreSQL database using Docker Compose:
+3. Start the PostgreSQL, Liquibase and app itself using Docker Compose:
 
     ```bash
     docker-compose up -d
@@ -31,7 +31,8 @@ This is a simple translation service built with Spring Boot that uses an externa
 
 4. Run the application and add .env file
 
-    
+    .env file: https://disk.yandex.ru/d/5BzAc_341XoLtg
+Paste it in the root directory of the project.
 
 5. Open your browser and go to `http://localhost:8080`.
 
