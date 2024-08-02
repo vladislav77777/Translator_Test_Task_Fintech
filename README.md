@@ -44,6 +44,7 @@ Screens:
 ![image](https://github.com/user-attachments/assets/39d72bad-a4fd-4731-8220-e7eae157f5a7)
 
 - translation error
+  
 ![image](https://github.com/user-attachments/assets/538d7d98-b510-4db7-90a2-96d2c143dfdf)
 
 ![image](https://github.com/user-attachments/assets/a4af0c95-c59d-4623-8ec4-b90e5d436433)
