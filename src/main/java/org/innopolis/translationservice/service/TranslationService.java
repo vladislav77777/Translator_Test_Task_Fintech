@@ -58,7 +58,6 @@ public class TranslationService {
         headers.set("Content-Type", "application/x-www-form-urlencoded");
 
 
-        // Ensure correct encoding of parameters
         String body = String.format("q=%s&source=%s&target=%s",
                 encodeValue(word),
                 sourceLang,

@@ -17,19 +17,6 @@ public class TranslationRequestRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-//    private static final class TranslationRequestRowMapper implements RowMapper<TranslationRequest> {
-//        @Override
-//        public TranslationRequest mapRow(ResultSet rs, int rowNum) throws SQLException {
-//            return new TranslationRequest(
-//                    rs.getLong("id"),
-//                    rs.getString("ip"),
-//                    rs.getString("input"),
-//                    rs.getString("result"),
-//                    rs.getTimestamp("timestamp").toLocalDateTime()
-//            );
-//        }
-//    }
-
     public void save(TranslationRequest request) {
         jdbcTemplate.update(ADD_QUERY,
                 request.ip(), request.input(), request.result(), Timestamp.valueOf(request.timestamp())

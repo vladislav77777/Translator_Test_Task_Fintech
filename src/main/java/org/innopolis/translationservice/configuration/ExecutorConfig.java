@@ -8,7 +8,6 @@ import java.util.concurrent.Executors;
 
 @Configuration
 public class ExecutorConfig {
-
     @Bean
     public ExecutorService executorService() {
         return Executors.newFixedThreadPool(10);
