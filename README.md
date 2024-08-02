@@ -16,25 +16,19 @@ This is a simple translation service built with Spring Boot that uses an externa
     git clone https://github.com/vladislav77777/Translator_Test_Task_Fintech
     cd translation-service
     ```
+    
+2. Add .env file
 
-2. Build the project:
+    .env file: https://disk.yandex.ru/d/5BzAc_341XoLtg
+   
+Paste it in the root directory of the project.
 
-    ```bash
-    mvn clean install
-    ```
-
-3. Start the PostgreSQL, Liquibase and app itself using Docker Compose:
+3. Start the PostgreSQL, Liquibase and the application itself using Docker Compose:
 
     ```bash
     docker-compose up -d
     ```
-
-4. Run the application and add .env file
-
-    .env file: https://disk.yandex.ru/d/5BzAc_341XoLtg
-Paste it in the root directory of the project.
-
-5. Open your browser and go to `http://localhost:8080`.
+4. Open your browser and go to `http://localhost:8080`.
 
 ## Usage
 
