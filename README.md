@@ -22,7 +22,6 @@ This is a simple translation service built with Spring Boot that uses an externa
     ```bash
     mvn clean install
     ```
-    Add .env file
 
     .env file: https://disk.yandex.ru/d/5BzAc_341XoLtg
    
